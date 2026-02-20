@@ -1,41 +1,50 @@
-package ru.hogwarts.school.service;
+package com.example.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.entity.Faculty;
+import com.example.demo.entity.Student;
+import com.example.demo.repository.StudentRepository;
 import org.springframework.stereotype.Service;
-import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.repository.FacultyRepository;
-
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 @Service
-public class FacultyService {
+public class StudentService {
+    private final StudentRepository studentRepository;
 
-    private final FacultyRepository facultyRepository;
-
-    @Autowired
-    public FacultyService(FacultyRepository facultyRepository) {
-        this.facultyRepository = facultyRepository;
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
     }
 
-    public Faculty createFaculty(Faculty faculty) {
-        return facultyRepository.save(faculty);
+    // Стандартные методы (примеры)
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
-    public Faculty findFaculty(long id) {
-        Optional<Faculty> optional = facultyRepository.findById(id);
-        return optional.orElse(null);
+    public Student addStudent(Student student) {
+        return studentRepository.save(student);
     }
 
-    public Faculty editFaculty(Faculty faculty) {
-        return facultyRepository.save(faculty);
+    public Student getStudent(Long id) {
+        return studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Студент не найден"));
     }
 
-    public void deleteFaculty(long id) {
-        facultyRepository.deleteById(id);
+    public Student updateStudent(Long id, Student student) {
+        student.setId(id);
+        return studentRepository.save(student);
     }
 
-    public Collection<Faculty> getAllFaculties() {
-        return facultyRepository.findAll();
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
+    // Новый метод для поиска по возрасту
+    public List<Student> findByAgeBetween(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
+    }
+
+    // Метод для получения факультета студента
+    public Faculty getFacultyByStudentId(Long studentId) {
+        return studentRepository.findById(studentId)
+                .map(Student::getFaculty)
+                .orElseThrow(() -> new RuntimeException("Студент не найден"));
     }
 }
