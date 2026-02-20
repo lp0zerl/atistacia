@@ -68,4 +68,20 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Новые эндпоинты
+    @GetMapping("/count")
+    public ResponseEntity<Long> getStudentsCount() {
+        return ResponseEntity.ok(studentService.getCountOfStudents());
+    }
+
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> getAverageAge() {
+        return ResponseEntity.ok(studentService.getAverageAge());
+    }
+
+    @GetMapping("/last-five")
+    public ResponseEntity<List<Student>> getLastFiveStudents() {
+        return ResponseEntity.ok(studentService.getLastFiveStudents());
+    }
 }
