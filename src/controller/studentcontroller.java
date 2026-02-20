@@ -29,29 +29,43 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudent(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getStudent(id));
+        try {
+            return ResponseEntity.ok(studentService.getStudent(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
-        return ResponseEntity.ok(studentService.updateStudent(id, student));
+        try {
+            return ResponseEntity.ok(studentService.updateStudent(id, student));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.ok().build();
+        try {
+            studentService.deleteStudent(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Новый эндпоинт для фильтрации по возрасту
     @GetMapping("/by-age")
     public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam int min, @RequestParam int max) {
         return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
     }
 
-    // Эндпоинт для получения факультета студента
     @GetMapping("/{id}/faculty")
     public ResponseEntity<Faculty> getFacultyByStudent(@PathVariable Long id) {
-        return ResponseEntity.ok(studentService.getFacultyByStudentId(id));
+        try {
+            return ResponseEntity.ok(studentService.getFacultyByStudentId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

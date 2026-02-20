@@ -14,7 +14,6 @@ public class Faculty {
     @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
     private List<Student> students;
 
-    // Конструкторы
     public Faculty() {}
 
     public Faculty(String name, String color) {
@@ -22,36 +21,20 @@ public class Faculty {
         this.color = color;
     }
 
-    // Геттеры и сеттеры
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+    // Конструктор с id для тестов
+    public Faculty(Long id, String name, String color) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
         this.color = color;
     }
 
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
+    // Геттеры и сеттеры
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
+    public List<Student> getStudents() { return students; }
+    public void setStudents(List<Student> students) { this.students = students; }
 }

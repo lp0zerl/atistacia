@@ -29,29 +29,43 @@ public class FacultyController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getFaculty(id));
+        try {
+            return ResponseEntity.ok(facultyService.getFaculty(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Faculty> updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
-        return ResponseEntity.ok(facultyService.updateFaculty(id, faculty));
+        try {
+            return ResponseEntity.ok(facultyService.updateFaculty(id, faculty));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
-        facultyService.deleteFaculty(id);
-        return ResponseEntity.ok().build();
+        try {
+            facultyService.deleteFaculty(id);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Новый эндпоинт для поиска факультетов по имени или цвету (без учёта регистра)
     @GetMapping("/search")
     public ResponseEntity<List<Faculty>> searchFaculties(@RequestParam String query) {
         return ResponseEntity.ok(facultyService.findByNameOrColor(query));
     }
 
-    // Эндпоинт для получения студентов факультета
     @GetMapping("/{id}/students")
     public ResponseEntity<List<Student>> getStudentsByFaculty(@PathVariable Long id) {
-        return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
+        try {
+            return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
