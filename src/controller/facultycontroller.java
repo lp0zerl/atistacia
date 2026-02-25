@@ -1,71 +1,66 @@
-package com.example.demo.controller;
+package ru.hogwarts.school.controller;
 
-import com.example.demo.entity.Faculty;
-import com.example.demo.entity.Student;
-import com.example.demo.service.FacultyService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.service.FacultyService;
 
-import java.util.List;
+import java.util.Collection;
 
 @RestController
-@RequestMapping("/faculties")
+@RequestMapping("/faculty")
 public class FacultyController {
+
     private final FacultyService facultyService;
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Faculty>> getAllFaculties() {
-        return ResponseEntity.ok(facultyService.getAllFaculties());
-    }
-
     @PostMapping
     public ResponseEntity<Faculty> createFaculty(@RequestBody Faculty faculty) {
-        return ResponseEntity.ok(facultyService.addFaculty(faculty));
+        Faculty createdFaculty = facultyService.createFaculty(faculty);
+        return ResponseEntity.ok(createdFaculty);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(facultyService.getFaculty(id));
-        } catch (RuntimeException e) {
+    public ResponseEntity<Faculty> getFaculty(@PathVariable long id) {
+        Faculty faculty = facultyService.findFaculty(id);
+        if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(faculty);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Faculty> updateFaculty(@PathVariable Long id, @RequestBody Faculty faculty) {
-        try {
-            return ResponseEntity.ok(facultyService.updateFaculty(id, faculty));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+    @PutMapping
+    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
+        Faculty foundFaculty = facultyService.findFaculty(faculty.getId());
+        if (foundFaculty == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        Faculty editedFaculty = facultyService.editFaculty(faculty);
+        return ResponseEntity.ok(editedFaculty);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFaculty(@PathVariable Long id) {
-        try {
-            facultyService.deleteFaculty(id);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteFaculty(@PathVariable long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Faculty>> searchFaculties(@RequestParam String query) {
-        return ResponseEntity.ok(facultyService.findByNameOrColor(query));
+    @GetMapping
+    public ResponseEntity<Collection<Faculty>> getAllFaculties() {
+        return ResponseEntity.ok(facultyService.getAllFaculties());
     }
 
-    @GetMapping("/{id}/students")
-    public ResponseEntity<List<Student>> getStudentsByFaculty(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(facultyService.getStudentsByFacultyId(id));
-        } catch (RuntimeException e) {
+    // NEW FOR LESSON 4.5: самое длинное название факультета
+    @GetMapping("/longest-name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        String longestName = facultyService.getLongestFacultyName();
+        if (longestName == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(longestName);
     }
 }

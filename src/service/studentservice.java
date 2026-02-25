@@ -8,7 +8,9 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -41,7 +43,6 @@ public class StudentService {
         logger.info("Was invoked method for edit student with id = {}", student.getId());
         if (!studentRepository.existsById(student.getId())) {
             logger.error("Cannot edit student: no student with id = {}", student.getId());
-            // Здесь можно выбросить исключение, но пока просто возвращаем null
             return null;
         }
         return studentRepository.save(student);
@@ -58,5 +59,25 @@ public class StudentService {
     public Collection<Student> getAllStudents() {
         logger.info("Was invoked method for get all students");
         return studentRepository.findAll();
+    }
+
+    // NEW FOR LESSON 4.5: получить имена студентов на 'A' (в верхнем регистре, отсортированы)
+    public List<String> getStudentsNamesStartingWithA() {
+        logger.info("Was invoked method for get students names starting with 'A'");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .map(String::toUpperCase)
+                .filter(name -> name.startsWith("A"))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    // NEW FOR LESSON 4.5: получить средний возраст всех студентов
+    public Double getAverageAge() {
+        logger.info("Was invoked method for get average age of students");
+        return studentRepository.findAll().stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
     }
 }

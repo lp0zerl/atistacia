@@ -1,87 +1,69 @@
-package com.example.demo.controller;
+package ru.hogwarts.school.controller;
 
-import com.example.demo.entity.Faculty;
-import com.example.demo.entity.Student;
-import com.example.demo.service.StudentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.StudentService;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/student")
 public class StudentController {
+
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Student>> getAllStudents() {
-        return ResponseEntity.ok(studentService.getAllStudents());
-    }
-
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        return ResponseEntity.ok(studentService.addStudent(student));
+        Student createdStudent = studentService.createStudent(student);
+        return ResponseEntity.ok(createdStudent);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(studentService.getStudent(id));
-        } catch (RuntimeException e) {
+    public ResponseEntity<Student> getStudent(@PathVariable long id) {
+        Student student = studentService.findStudent(id);
+        if (student == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(student);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
-        try {
-            return ResponseEntity.ok(studentService.updateStudent(id, student));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+    @PutMapping
+    public ResponseEntity<Student> editStudent(@RequestBody Student student) {
+        Student foundStudent = studentService.findStudent(student.getId());
+        if (foundStudent == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        Student editedStudent = studentService.editStudent(student);
+        return ResponseEntity.ok(editedStudent);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        try {
-            studentService.deleteStudent(id);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteStudent(@PathVariable long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/by-age")
-    public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam int min, @RequestParam int max) {
-        return ResponseEntity.ok(studentService.findByAgeBetween(min, max));
+    @GetMapping
+    public ResponseEntity<Collection<Student>> getAllStudents() {
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    @GetMapping("/{id}/faculty")
-    public ResponseEntity<Faculty> getFacultyByStudent(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(studentService.getFacultyByStudentId(id));
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    // NEW FOR LESSON 4.5: имена студентов на 'A'
+    @GetMapping("/names-starting-with-a")
+    public ResponseEntity<List<String>> getStudentsNamesStartingWithA() {
+        return ResponseEntity.ok(studentService.getStudentsNamesStartingWithA());
     }
 
-    // Новые эндпоинты
-    @GetMapping("/count")
-    public ResponseEntity<Long> getStudentsCount() {
-        return ResponseEntity.ok(studentService.getCountOfStudents());
-    }
-
+    // NEW FOR LESSON 4.5: средний возраст
     @GetMapping("/average-age")
     public ResponseEntity<Double> getAverageAge() {
         return ResponseEntity.ok(studentService.getAverageAge());
-    }
-
-    @GetMapping("/last-five")
-    public ResponseEntity<List<Student>> getLastFiveStudents() {
-        return ResponseEntity.ok(studentService.getLastFiveStudents());
     }
 }
