@@ -55,15 +55,84 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    // NEW FOR LESSON 4.5: имена студентов на 'A'
+    // Эндпоинты из урока 4.5
     @GetMapping("/names-starting-with-a")
     public ResponseEntity<List<String>> getStudentsNamesStartingWithA() {
         return ResponseEntity.ok(studentService.getStudentsNamesStartingWithA());
     }
 
-    // NEW FOR LESSON 4.5: средний возраст
     @GetMapping("/average-age")
     public ResponseEntity<Double> getAverageAge() {
         return ResponseEntity.ok(studentService.getAverageAge());
+    }
+
+    // ====================== УРОК 4.6 ======================
+
+    /**
+     * Выводит имена первых шести студентов в консоль:
+     * - 1-2 в основном потоке,
+     * - 3-4 в отдельном потоке,
+     * - 5-6 в ещё одном отдельном потоке.
+     * Используется несинхронизированный вывод (возможно перемешивание).
+     */
+    @GetMapping("/print-parallel")
+    public void printParallel() {
+        List<Student> students = studentService.getAllStudents().stream().limit(6).toList();
+
+        // Первые два в основном потоке
+        if (students.size() > 0) System.out.println(students.get(0).getName());
+        if (students.size() > 1) System.out.println(students.get(1).getName());
+
+        // Поток для 3-4
+        if (students.size() > 2) {
+            new Thread(() -> {
+                if (students.size() > 2) System.out.println(students.get(2).getName());
+                if (students.size() > 3) System.out.println(students.get(3).getName());
+            }).start();
+        }
+
+        // Поток для 5-6
+        if (students.size() > 4) {
+            new Thread(() -> {
+                if (students.size() > 4) System.out.println(students.get(4).getName());
+                if (students.size() > 5) System.out.println(students.get(5).getName());
+            }).start();
+        }
+    }
+
+    /**
+     * Выводит имена первых шести студентов в консоль с использованием синхронизированного метода.
+     * Распределение по потокам аналогично printParallel.
+     */
+    @GetMapping("/print-synchronized")
+    public void printSynchronized() {
+        List<Student> students = studentService.getAllStudents().stream().limit(6).toList();
+
+        // Первые два в основном потоке
+        if (students.size() > 0) printName(students.get(0).getName());
+        if (students.size() > 1) printName(students.get(1).getName());
+
+        // Поток для 3-4
+        if (students.size() > 2) {
+            new Thread(() -> {
+                if (students.size() > 2) printName(students.get(2).getName());
+                if (students.size() > 3) printName(students.get(3).getName());
+            }).start();
+        }
+
+        // Поток для 5-6
+        if (students.size() > 4) {
+            new Thread(() -> {
+                if (students.size() > 4) printName(students.get(4).getName());
+                if (students.size() > 5) printName(students.get(5).getName());
+            }).start();
+        }
+    }
+
+    /**
+     * Синхронизированный метод для вывода имени в консоль.
+     */
+    private synchronized void printName(String name) {
+        System.out.println(name);
     }
 }
