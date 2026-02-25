@@ -1,73 +1,62 @@
-package com.example.demo.service;
+package ru.hogwarts.school.service;
 
-import com.example.demo.entity.Faculty;
-import com.example.demo.entity.Student;
-import com.example.demo.repository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
+
+import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class StudentService {
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
+
     private final StudentRepository studentRepository;
 
+    @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
-    // CRUD
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
-    }
-
-    public Student addStudent(Student student) {
+    public Student createStudent(Student student) {
+        logger.info("Was invoked method for create student");
         return studentRepository.save(student);
     }
 
-    public Student getStudent(Long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Студент не найден"));
-    }
-
-    public Student updateStudent(Long id, Student student) {
-        if (!studentRepository.existsById(id)) {
-            throw new RuntimeException("Студент не найден");
+    public Student findStudent(long id) {
+        logger.info("Was invoked method for find student by id = {}", id);
+        Optional<Student> optional = studentRepository.findById(id);
+        if (optional.isEmpty()) {
+            logger.warn("No student with id = {}", id);
+            return null;
         }
-        student.setId(id);
+        return optional.get();
+    }
+
+    public Student editStudent(Student student) {
+        logger.info("Was invoked method for edit student with id = {}", student.getId());
+        if (!studentRepository.existsById(student.getId())) {
+            logger.error("Cannot edit student: no student with id = {}", student.getId());
+            // Здесь можно выбросить исключение, но пока просто возвращаем null
+            return null;
+        }
         return studentRepository.save(student);
     }
 
-    public void deleteStudent(Long id) {
+    public void deleteStudent(long id) {
+        logger.info("Was invoked method for delete student with id = {}", id);
         if (!studentRepository.existsById(id)) {
-            throw new RuntimeException("Студент не найден");
+            logger.warn("Attempt to delete non-existent student with id = {}", id);
         }
         studentRepository.deleteById(id);
     }
 
-    // Фильтрация по возрасту
-    public List<Student> findByAgeBetween(int min, int max) {
-        return studentRepository.findByAgeBetween(min, max);
-    }
-
-    // Получение факультета студента
-    @Transactional(readOnly = true)
-    public Faculty getFacultyByStudentId(Long studentId) {
-        return studentRepository.findById(studentId)
-                .map(Student::getFaculty)
-                .orElseThrow(() -> new RuntimeException("Студент не найден"));
-    }
-
-    // Новые методы (статистика)
-    public long getCountOfStudents() {
-        return studentRepository.countAllStudents();
-    }
-
-    public double getAverageAge() {
-        Double avg = studentRepository.getAverageAge();
-        return avg == null ? 0.0 : avg;
-    }
-
-    public List<Student> getLastFiveStudents() {
-        return studentRepository.findLastFiveStudents();
+    public Collection<Student> getAllStudents() {
+        logger.info("Was invoked method for get all students");
+        return studentRepository.findAll();
     }
 }
