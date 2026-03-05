@@ -1,0 +1,11 @@
+# База данных (было)
+spring.datasource.url=jdbc:postgresql://localhost:5432/hogwarts
+spring.datasource.username=student
+spring.datasource.password=chocolatefrog
+
+# Hibernate (ИЗМЕНЕНО: теперь только валидация, а не update)
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+
+# Liquibase (НОВОЕ)
+spring.liquibase.change-log=classpath:liquibase/changelog-master.yml
