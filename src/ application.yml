@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    primary:
+      jdbc-url: jdbc:h2:file:./transaction;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;ACCESS_MODE_DATA=r
+      driver-class-name: org.h2.Driver
+      username: sa
+      password:
+      hikari:
+        read-only: true
+    secondary:
+      jdbc-url: jdbc:postgresql://localhost:5432/recommendation
+      driver-class-name: org.postgresql.Driver
+      username: postgres
+      password: postgres
+      hikari:
+        read-only: false
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+
+  cache:
+    cache-names: userOf, activeUserOf, sumCompare, sumCompareDepositWithdraw
+    caffeine:
+      spec: maximumSize=1000, expireAfterAccess=3600s
+
+telegram:
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN:}
+    username: ${TELEGRAM_BOT_USERNAME:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: ${spring.application.name:recommendation-system}
+    version: @project.version@

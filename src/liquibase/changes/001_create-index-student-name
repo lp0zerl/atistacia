@@ -1,4 +1,0 @@
--- liquibase formatted sql
-
--- changeset author:1
-CREATE INDEX idx_student_name ON student (name);
