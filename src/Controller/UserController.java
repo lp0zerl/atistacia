@@ -1,4 +1,4 @@
-package Controller;
+package ru.avito.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +34,6 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Информация обновлена")
     @ApiResponse(responseCode = "401", description = "Не авторизован")
     public ResponseEntity<UserDto> updateCurrentUser(@RequestBody UserDto user) {
-        // заглушка: возвращаем переданные данные с id = 1
         user.setId(1);
         return ResponseEntity.ok(user);
     }

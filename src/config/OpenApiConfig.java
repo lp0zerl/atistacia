@@ -1,4 +1,4 @@
-package config;
+package ru.avito.configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,6 +14,6 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Avito API")
                         .version("1.0")
-                        .description("Документация для первого этапа"));
+                        .description("Документация для второго этапа"));
     }
 }

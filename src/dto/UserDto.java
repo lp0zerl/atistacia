@@ -1,4 +1,4 @@
-package dto;
+package ru.avito.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

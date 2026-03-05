@@ -1,4 +1,4 @@
-package Controller;
+package ru.avito.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +34,7 @@ public class AdController {
         stub.setPk(0);
         stub.setTitle(ad.getTitle());
         stub.setPrice(ad.getPrice());
-        stub.setAuthor("user@example.com"); // заглушка
+        stub.setAuthor("user@example.com");
         return ResponseEntity.status(HttpStatus.CREATED).body(stub);
     }
 
@@ -43,7 +43,6 @@ public class AdController {
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "404", description = "Не найдено")
     public ResponseEntity<AdDto> getAd(@PathVariable Integer id) {
-        // Заглушка: всегда возвращаем пустой объект
         return ResponseEntity.ok(new AdDto());
     }
 
@@ -57,7 +56,7 @@ public class AdController {
         stub.setPk(id);
         stub.setTitle(ad.getTitle());
         stub.setPrice(ad.getPrice());
-        stub.setAuthor("user@example.com"); // заглушка
+        stub.setAuthor("user@example.com");
         return ResponseEntity.ok(stub);
     }
 

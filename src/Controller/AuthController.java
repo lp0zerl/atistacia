@@ -1,4 +1,4 @@
-package Controller;
+package ru.avito.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +25,6 @@ public class AuthController {
     @ApiResponse(responseCode = "200", description = "Успешный вход")
     @ApiResponse(responseCode = "401", description = "Неверные учётные данные")
     public ResponseEntity<?> login(@RequestBody LoginReqDto loginReq) {
-        // всегда успех для заглушки
         return ResponseEntity.ok().build();
     }
 
@@ -34,7 +33,6 @@ public class AuthController {
     @ApiResponse(responseCode = "201", description = "Пользователь создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     public ResponseEntity<?> register(@RequestBody RegisterReqDto registerReq) {
-        // заглушка: возвращаем 201
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

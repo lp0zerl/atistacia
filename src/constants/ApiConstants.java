@@ -1,4 +1,4 @@
-package constants;
+package ru.avito.constants;
 
 public final class ApiConstants {
     public static final String ADS_URL = "/ads";
