@@ -1,11 +1,11 @@
-package ru.star.bank.recommendation;
+package ru.avito;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RecommendationApplication {
+public class AvitoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(RecommendationApplication.class, args);
+        SpringApplication.run(AvitoApplication.class, args);
     }
 }
