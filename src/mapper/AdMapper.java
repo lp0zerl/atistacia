@@ -1,4 +1,4 @@
-package mapper;
+package ru.avito.mapper;
 
 import org.mapstruct.*;
 import ru.avito.dto.AdDto;

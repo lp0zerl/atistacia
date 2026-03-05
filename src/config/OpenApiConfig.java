@@ -14,6 +14,6 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Avito API")
                         .version("1.0")
-                        .description("Документация для второго этапа"));
+                        .description("Документация для третьего этапа"));
     }
 }

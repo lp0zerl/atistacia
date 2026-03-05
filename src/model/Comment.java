@@ -1,4 +1,4 @@
-package model;
+package ru.avito.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package model;
+package ru.avito.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,4 +34,8 @@ public class User {
     @Column(nullable = false)
     @Size(max = 20)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 }

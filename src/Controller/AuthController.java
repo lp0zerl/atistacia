@@ -13,12 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.avito.constants.ApiConstants;
 import ru.avito.dto.LoginReqDto;
 import ru.avito.dto.RegisterReqDto;
+import ru.avito.service.AuthService;
 
 @RestController
 @RequestMapping(ApiConstants.AUTH_URL)
 @RequiredArgsConstructor
 @Tag(name = "Аутентификация")
 public class AuthController {
+
+    private final AuthService authService;
 
     @PostMapping("/login")
     @Operation(summary = "Вход в систему")
@@ -31,8 +34,9 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Регистрация нового пользователя")
     @ApiResponse(responseCode = "201", description = "Пользователь создан")
-    @ApiResponse(responseCode = "400", description = "Некорректные данные")
+    @ApiResponse(responseCode = "400", description = "Некорректные данные или пользователь уже существует")
     public ResponseEntity<?> register(@RequestBody RegisterReqDto registerReq) {
+        authService.register(registerReq);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

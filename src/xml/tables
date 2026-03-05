@@ -69,4 +69,12 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="4" author="team">
+        <addColumn tableName="users">
+            <column name="role" type="varchar(20)" defaultValue="USER">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
