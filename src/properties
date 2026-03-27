@@ -1,0 +1,19 @@
+# Порт сервера (опционально)
+server.port=8080
+
+# Подключение к базе данных PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/telegram_bot_db
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA и Hibernate
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+# Liquibase
+spring.liquibase.change-log=classpath:db/changelog/changelog-master.xml
+
+# Токен бота (замените на свой)
+telegram.bot.token=6290793636:AAGIqfVDV9My8UfMQGfvG5arXo8ZAaY6Bhs
